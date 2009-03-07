@@ -2,7 +2,7 @@
 
 Os cabeçalhos de funções devem seguir o seguinte formato:
 
-/** <br>
+/'**' <br>
 \details This function .... <br>
 \author Fulano Ciclano Beltrano<br>
 \date 15/02/2008   <br>
