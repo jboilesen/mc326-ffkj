@@ -2,17 +2,17 @@
 
 Os cabeçalhos de funções devem seguir o seguinte formato:
 
-/**
-\details This function ....
-\author Fulano Ciclano Beltrano
-\date 15/02/2008   
-\param *a* The length ...
-\param *b* The width ...
-\param *c* The height ... 
-\return *vol* The voulem ...
-\note Be sure that:
-- length > 0;
-- width > 0;
-- height > 0.
-\see calculate_area, calculate_size
-*/
+/** <br>
+\details This function .... <br>
+\author Fulano Ciclano Beltrano<br>
+\date 15/02/2008   <br>
+\param *a* The length ...<br>
+\param *b* The width ...<br>
+\param *c* The height ... <br>
+\return *vol* The voulem ...<br>
+\note Be sure that:<br>
+- length > 0;<br>
+- width > 0;<br>
+- height > 0.<br>
+\see calculate_area, calculate_size<br>
+*/<br>
