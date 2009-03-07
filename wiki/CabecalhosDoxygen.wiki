@@ -1,0 +1,18 @@
+#summary Padrão para cabeçalhos de funções
+
+Os cabeçalhos de funções devem seguir o seguinte formato:
+
+/**
+\details This function ....
+\author Fulano Ciclano Beltrano
+\date 15/02/2008   
+\param *a* The length ...
+\param *b* The width ...
+\param *c* The height ... 
+\return *vol* The voulem ...
+\note Be sure that:
+- length > 0;
+- width > 0;
+- height > 0.
+\see calculate_area, calculate_size
+*/
