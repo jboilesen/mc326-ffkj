@@ -1,4 +1,8 @@
-//lib.h
+/*lib.h*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "strings.h"
 
 #define SEPARATORS ",;!.?():"
 #define FILENAME "palavras.txt"
@@ -10,7 +14,6 @@ int count;
 struct tWord *next;
 
 } Word;
-
 
 int isAlphaNumeric( char );
 
