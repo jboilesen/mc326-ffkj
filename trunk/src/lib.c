@@ -1,5 +1,7 @@
 /*lib.c*/
 
+#include "lib.h"
+
 int isAlphaNumeric( char c ){
 
 	if( (c>='A' && c<='Z') || (c>='0' && c<='9') ) return 1;
@@ -15,7 +17,7 @@ int toBlank( char *string, char *separators ){
 	sep = separators;
 
 	/*Se houver separadores*/
-	if( *separators != '\0' ){
+	if( separators != NULL ){
 
 		while(1){
 			str += strcspn( str, sep );
@@ -27,7 +29,7 @@ int toBlank( char *string, char *separators ){
 	/*Se não houver separadores*/
 	else{
 
-		while( str != '\0' ){
+		while( *str != '\0' ){
 			if( !isAlphaNumeric(*str) ) *str = ' ';
 			str++;
 		}
@@ -51,37 +53,78 @@ int toUpper( char *string ) {
 	return cont;
 }
 
-int wordCount( Word **string ){
+int blankSplit(char *str, Word **lst){
+    char *s;
+    int n=0;
 
-	Word *str1, *str2;
+    Word *aux;
 
-	str1 = str2 = *string;
+    aux = *lst;
 
-	if( str1 == NULL ) return 0;
+    s = strtok (str, BLANK);
+    aux = malloc(sizeof(Word));
+	*lst = aux;
+    while( s!=NULL ){
+        n++;
 
-	str1->count = 1;
+        aux->info = malloc(strlen(s)*sizeof(char));
+        strcpy(aux->info, s);
+        aux->count = 0;
 
-	while( str2 != NULL ){
-
-	str1 = *string;
-
-		while( str1 != str2 ){
-			if( str1->info != str2->info )
-				str1 = str1->next;
-			else{
-				str1->count++;
-				delWord( &str1, str2 );
-			}
-				
-
-	
+        s = strtok ( NULL, BLANK);
 
 
+	aux->next = malloc(sizeof(Word));
+	aux = aux->next;
+    }
+free(aux);
 
-	str2 = str2->next;
+    return n;
+}
 
+int wordCount( Word **list ) {
+
+	Word *l1, *l2;
+	int dif=0, cont=0;
+
+	l1 = l2 = *list;
+
+	if( l1 == NULL ) return 0;
+
+	while( l2 != NULL ){
+
+		l1 = *list;
+
+		printf("entrada no while %d\n l1 eh %s\n l2 eh %s\n", ++cont, l1->info, l2->info);
+
+		while( (l1 != l2) && (l1->info != l2->info) ) l1 = l1->next;
+
+		if( l1 == l2 ){ l1->count++; l2 = l2->next; dif++; }
+		else delWord( l1, &l2 );
 	}
 
-int delWord( Word **begin, Word *t ){
+	return --dif;
+}
 
-if( (*begin)->next == t ) 
+int delWord( Word *begin, Word **t){
+
+printf("Apagando %s\n\n", (*t)->info);
+
+	while( begin->next != *t ) begin = begin->next;
+
+	*t = (*t)->next;
+	free(begin->next->info);
+	free(begin->next);
+	begin->next = *t;
+
+	return 0;
+}
+
+int printWord( Word *list ){
+
+	while( list ){
+		printf("info: %s\n count: %d\n\n", list->info, list->count);
+		list = list->next;
+	}
+	return 0;
+}
