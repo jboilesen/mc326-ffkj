@@ -4,20 +4,30 @@
 
 int main(){
 
-	char string[]="O HC ! 8654 eh uma BiXo232Na $ e g1os1ta de D2AR o CU3!!!",
-	     separators[]="?$";
+	Word *word;
+	char string[200],
+	     separators[]="?$!";
+
+    while(1){
+	gets(string);
 
 	printf("%s\n\n", string);
 
 	toUpper(string);
+	printf("toUpper\n%s\n\n", string);
 
-	printf("%s\n\n", string);
+	toBlank(string, NULL);
+	printf("toBlank\n%s\n\n", string);
 
-	toBlank(string, separators);
+	printf("blankSplit\nnumero de palavras %d\n\n", blankSplit(string, &word));
+	printWord(word);
 
-	printf("%s\n\n", string);
+	printf("wordCount\npalavra diferentes %d\n\n",wordCount(&word));
+	printWord(word);
 
-	return 0;
+    }
+
+return 0;
 }
 
 
