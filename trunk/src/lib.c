@@ -137,3 +137,71 @@ int printWord( Word *list ){
 	}
 	return 0;
 }
+
+int printFile( Word *iniWord, char *filePath ){
+	FILE *p;
+	Word *aux;
+
+	p = fopen(filePath,"w");
+	if (!p){
+		printf("Erro ao criar arquivo de saída!\n");
+		return FALSE;
+	}
+
+	aux = iniWord;
+
+	while (aux!=NULL){
+		fprintf(p,"%s : %d\n",aux->info,aux->count);
+		aux = aux->next;
+	}
+	fclose(p);
+	return TRUE;
+}
+
+int cCount ( Word *iniWord, char C){
+	char *auxStr,*auxPointer,control;
+	Word *auxWord;
+	int counter,tamStr;
+
+	counter = 0;
+	auxWord = iniWord;
+
+	while (auxWord!=NULL){
+		auxStr = strdup(auxWord->info);
+		tamStr = strlen(auxStr);
+		do{
+			auxPointer = memchr(auxStr,C,tamStr);
+			if (auxPointer!=NULL){
+				counter++;
+				if (C==CHANGECHR){
+					*auxPointer = CHANGECHR2;
+				}else{
+					*auxPointer = CHANGECHR;
+				}
+			}
+		}while(auxPointer!=NULL);
+		auxWord = auxWord->next;
+		free(auxStr);/*pelo q eu me lembro do free, acho q ta certo*/
+	}
+	return counter;
+}
+
+int sCount( Word *iniWord, char *Pal ){
+	Word *auxWord;
+	int counter,tamPal,tamInfo;
+
+	auxWord = iniWord;
+	counter = 0;
+	tamPal = strlen(Pal);
+
+	while (auxWord != NULL){
+		tamInfo = strlen(auxWord->info);
+		if (tamInfo==tamPal){
+			if (memcmp(auxWord->info,Pal,tamInfo)==0){
+				counter++;
+			}
+		}
+		auxWord = auxWord->next;
+	}
+	return counter;
+}

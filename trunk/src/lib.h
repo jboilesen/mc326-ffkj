@@ -8,11 +8,17 @@
 #define FILENAME "palavras.txt"
 #define BLANK " "
 
+#define TRUE 1
+#define FALSE 0
+
+#define CHANGECHR '-'
+#define CHANGECHR2 '_'
+
 typedef struct tWord{
 
-char *info;
-int count;
-struct tWord *next;
+	char *info;
+	int count;
+	struct tWord *next;
 
 } Word;
 
@@ -32,3 +38,8 @@ int delWord( Word*, Word** );
 int printFile( Word*, char* );
 
 int printWord( Word* );
+
+int cCount ( Word *, char );
+
+int sCount( Word*, char* );
+
