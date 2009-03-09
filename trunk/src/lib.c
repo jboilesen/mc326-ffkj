@@ -54,32 +54,33 @@ int toUpper( char *string ) {
 }
 
 int blankSplit(char *str, Word **lst){
-    char *s;
-    int n=0;
+	char *s;
+	int n=0;
 
-    Word *aux;
+	Word *aux;
 
-    aux = *lst;
+	aux = *lst;
 
-    s = strtok (str, BLANK);
-    aux = malloc(sizeof(Word));
+	s = strtok (str, BLANK);
+	aux = malloc(sizeof(Word));
 	*lst = aux;
-    while( s!=NULL ){
-        n++;
+	while( s!=NULL ){
+		n++;
 
-        aux->info = malloc(strlen(s)*sizeof(char));
-        strcpy(aux->info, s);
-        aux->count = 0;
+		aux->info = malloc(strlen(s)*sizeof(char));
+		strcpy(aux->info, s);
+		aux->count = 0;
 
-        s = strtok ( NULL, BLANK);
+		s = strtok ( NULL, BLANK);
 
+		if( s!=NULL ){
+			aux->next = malloc(sizeof(Word));
+			aux = aux->next;
+		}
+		else aux = NULL;
+	}
 
-	aux->next = malloc(sizeof(Word));
-	aux = aux->next;
-    }
-free(aux);
-
-    return n;
+	return n;
 }
 
 int wordCount( Word **list ) {
@@ -87,28 +88,36 @@ int wordCount( Word **list ) {
 	Word *l1, *l2;
 	int dif=0, cont=0;
 
-	l1 = l2 = *list;
+	l1 = *list;
 
 	if( l1 == NULL ) return 0;
 
-	while( l2 != NULL ){
+	while( l1 != NULL ){
 
-		l1 = *list;
+		l2 = l1->next;
 
-		printf("entrada no while %d\n l1 eh %s\n l2 eh %s\n", ++cont, l1->info, l2->info);
+		while(l2 != NULL){
 
-		while( (l1 != l2) && (l1->info != l2->info) ) l1 = l1->next;
+			if( !(strcmp(l1->info,l2->info)) ){
+				l1->count++;
+				delWord(l1, &l2);
+			}
+			else l2 = l2->next;
 
-		if( l1 == l2 ){ l1->count++; l2 = l2->next; dif++; }
-		else delWord( l1, &l2 );
+		}
+
+		l1->count++;
+		l1 = l1->next;
+		dif++;
+
 	}
 
-	return --dif;
+	return dif;
 }
 
 int delWord( Word *begin, Word **t){
 
-printf("Apagando %s\n\n", (*t)->info);
+	printf("Apagando %s\n\n", (*t)->info);
 
 	while( begin->next != *t ) begin = begin->next;
 
