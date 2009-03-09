@@ -25,6 +25,8 @@ int main(){
 	printf("wordCount\npalavra diferentes %d\n\n",wordCount(&word));
 	printWord(word);
 
+	printFile(word,FILENAME);
+
     }
 
 return 0;
