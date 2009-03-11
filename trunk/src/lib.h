@@ -5,7 +5,6 @@
 #include <string.h>
 
 #define SEPARATORS ",;!.?():"
-#define FILENAME "palavras.txt"
 #define BLANK " "
 
 #define TRUE 1
@@ -39,7 +38,10 @@ int printFile( Word*, char* );
 
 int printWord( Word* );
 
-int cCount ( Word *, char );
+int cCountWord ( Word *, char );
 
-int sCount( Word*, char* );
+int sCountWord ( Word *, char *);
 
+int cCount ( char *, char );
+
+int sCount ( char *, char * );
