@@ -1,6 +1,9 @@
 /*lib.c*/
 
 #include "lib.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 int isAlphaNumeric( char c ){
 
@@ -86,7 +89,7 @@ int blankSplit(char *str, Word **lst){
 int wordCount( Word **list ) {
 
 	Word *l1, *l2;
-	int dif=0, cont=0;
+	int dif=0;
 
 	l1 = *list;
 
@@ -117,7 +120,7 @@ int wordCount( Word **list ) {
 
 int delWord( Word *begin, Word **t){
 
-	printf("Apagando %s\n\n", (*t)->info);
+	//DEBUG printf("Apagando %s\n\n", (*t)->info);
 
 	while( begin->next != *t ) begin = begin->next;
 
@@ -132,7 +135,7 @@ int delWord( Word *begin, Word **t){
 int printWord( Word *list ){
 
 	while( list ){
-		printf("info: %s\n count: %d\n\n", list->info, list->count);
+		printf("%s : %d\n", list->info, list->count);
 		list = list->next;
 	}
 	return 0;
@@ -151,15 +154,15 @@ int printFile( Word *iniWord, char *filePath ){
 	aux = iniWord;
 
 	while (aux!=NULL){
-		fprintf(p,"%s : %d\n",aux->info,aux->count);
+		fprintf(p,"%s:%d\n",aux->info,aux->count);
 		aux = aux->next;
 	}
 	fclose(p);
 	return TRUE;
 }
 
-int cCount ( Word *iniWord, char C){
-	char *auxStr,*auxPointer,control;
+int cCountWord ( Word *iniWord, char C){
+	char *auxStr,*auxPointer;
 	Word *auxWord;
 	int counter,tamStr;
 
@@ -181,12 +184,12 @@ int cCount ( Word *iniWord, char C){
 			}
 		}while(auxPointer!=NULL);
 		auxWord = auxWord->next;
-		free(auxStr);/*pelo q eu me lembro do free, acho q ta certo*/
+		free(auxStr);
 	}
 	return counter;
 }
 
-int sCount( Word *iniWord, char *Pal ){
+int sCountWord( Word *iniWord, char *Pal ){
 	Word *auxWord;
 	int counter,tamPal,tamInfo;
 
@@ -204,4 +207,34 @@ int sCount( Word *iniWord, char *Pal ){
 		auxWord = auxWord->next;
 	}
 	return counter;
+}
+
+int cCount(char *text, char c){
+    int n=0;
+
+    char *sub;
+    sub  = memchr(text,c, strlen(text));
+    while(sub!=NULL){
+        sub++;
+        n++;
+        sub = (char*) memchr(sub, c, strlen(sub));
+    }
+    
+    return n;
+}
+
+int sCount(char *text, char *pal){
+
+    int n=0;
+    char *sub;
+
+    sub  = memchr(text, pal[0], strlen(text));
+    while(sub!=NULL){
+        if(memcmp(sub, pal, strlen(pal))==0)
+            n++;
+        sub++;
+        sub = (char*) memchr(sub, pal[0], strlen(sub));
+    }
+    
+    return n;
 }
