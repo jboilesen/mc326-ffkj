@@ -1,12 +1,1 @@
-vamo escreve alguma coisa!
-blaaaa
-
-
-blaaaaaaa
-
-
-blaaaaaaaaaa
-
-
-
-blaaaaaaaaaaaaaaaa
+creu bixa loca!`
