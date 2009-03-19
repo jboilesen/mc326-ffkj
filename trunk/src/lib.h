@@ -45,3 +45,5 @@ int sCountWord ( Word *, char *);
 int cCount ( char *, char );
 
 int sCount ( char *, char * );
+
+char *sepString (char **str, char *SEP);

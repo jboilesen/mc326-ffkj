@@ -238,3 +238,57 @@ int sCount(char *text, char *pal){
     
     return n;
 }
+
+/*A funcao retorna um ponteiro para a palavra separada
+Parametros:
+-char **str: ponteiro a ser alterado para parar no final de cada palavra separada
+-char *SEP: string com os separadores;
+Feita por: Jonathan Nunes Boilesen
+2:11 a.m. 19/03/2009*/
+char *sepString (char **str, char *SEP){
+	int sizeSEP,iniPos,endPos,flagIni,flagEnd,sizeReturn;
+	char *returnStr;
+	sizeSEP = strlen(SEP);
+	iniPos = 0;
+	endPos = 0;
+	flagIni = 0;
+	flagEnd = 0;
+	returnStr = NULL;
+	/*verifica o caso dos parametro serem invalidos*/
+	if ((str!=NULL)&&(SEP!=NULL)){
+		/*verifica se foi inicializada a str*/
+		while (*str!=NULL){ 
+			/*busca o caracter na string de separadores*/
+			if (memchr(SEP,**str,sizeSEP)==NULL){
+				/*no caso de nao encontrar, marca o inicio da palavra com o flagIni = 1*/
+				if (flagIni == 0){
+					/*inicializa o endPos onde comeca a palavra*/
+					endPos = iniPos;
+					flagIni = 1;
+				}
+			}else{
+				/*no caso de encotrar um separador marcando o fim da palavra*/
+				if (flagIni == 1){
+					/*por boas praticas, sinaliza o fim na flagEnd e ja passa o ponteiro para o proximo caracter, afinal este eh separador*/
+					flagEnd = 1;
+					*str++;
+					break;
+				}
+			}
+			/*verifica qual posicao esta marcando, do inicio ou do fim*/
+			if (flagIni == 0){
+				iniPos++;
+			}else{
+				endPos++;
+			}
+			*str++;
+		}
+		/*calcula o tamanho nescessario para guardar a palavra + o sentinela \0*/
+		sizeReturn = (endPos - iniPos)+1;
+		/*aloca e depois ja insere o sentinela*/
+		returnStr = (char*)malloc(sizeof(char)*sizeReturn);
+		returnStr[sizeReturn-1] = '\0';		
+	}
+
+	return returnStr;
+}
