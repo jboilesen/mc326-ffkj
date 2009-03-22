@@ -18,7 +18,6 @@ void toBlank( char *string, char *separators ){
 
 	/*Se houver separadores*/
 	if( separators != NULL ){
-
 		while(TRUE){
 			str += strcspn( str, sep );
 			if( *str != '\0' ) *str = ' ';
@@ -27,7 +26,6 @@ void toBlank( char *string, char *separators ){
 
 	/*Se não houver separadores*/
 	else{
-
 		while( *str != '\0' ){
 			if( !isAlphaNumeric(*str) ) *str = ' ';
 			str++;
@@ -112,8 +110,6 @@ int wordCount( Word **list ) {
 }
 
 int delWord( Word *begin, Word **t){
-
-	//DEBUG printf("Apagando %s\n\n", (*t)->info);
 
 	while( begin->next != *t ) begin = begin->next;
 
@@ -203,31 +199,129 @@ int sCountWord( Word *iniWord, char *Pal ){
 }
 
 int cCount(char *text, char c){
-    int n=0;
+	int n=0;
 
-    char *sub;
-    sub  = memchr(text,c, strlen(text));
-    while(sub!=NULL){
-        sub++;
-        n++;
-        sub = (char*) memchr(sub, c, strlen(sub));
-    }
-    
-    return n;
+	char *sub;
+	sub  = memchr(text,c, strlen(text));
+	while(sub!=NULL){
+		sub++;
+		n++;
+		sub = (char*) memchr(sub, c, strlen(sub));
+	}
+
+	return n;
 }
 
 int sCount(char *text, char *pal){
 
-    int n=0;
-    char *sub;
+	int n=0;
+	char *sub;
 
-    sub  = memchr(text, pal[0], strlen(text));
-    while(sub!=NULL){
-        if(memcmp(sub, pal, strlen(pal))==0)
-            n++;
-        sub++;
-        sub = (char*) memchr(sub, pal[0], strlen(sub));
-    }
-    
-    return n;
+	sub  = memchr(text, pal[0], strlen(text));
+	while(sub!=NULL){
+		if(memcmp(sub, pal, strlen(pal))==0)
+			n++;
+		sub++;
+		sub = (char*) memchr(sub, pal[0], strlen(sub));
+	}
+
+	return n;
 }
+
+int countCharsFile(char *filePath){
+	char auxChar;
+	int count;
+	count = 0;
+	FILE *p;
+	p = fopen(filePath,"r");
+	if (!p){
+		return -1;
+	}
+	while ((auxChar = getc(p)) != EOF){
+		count++;
+	}
+	fclose(filePath);
+	return count;
+}
+
+char *sepString (char **str, char *SEP){
+	int sizeSEP,iniPos,endPos,flagIni,flagEnd,sizeReturn,i,j;
+	char *returnStr;
+	sizeSEP = strlen(SEP);
+	iniPos = 0;
+	endPos = 0;
+	flagIni = 0;
+	flagEnd = 0;
+	returnStr = NULL;
+	/*verifica o caso dos parametro serem invalidos*/
+	if ((str!=NULL)&&(SEP!=NULL)){
+		/*verifica se foi inicializada a str*/
+		while (*str!=NULL){ 
+			/*busca o caracter na string de separadores*/
+			if (memchr(SEP,**str,sizeSEP)==NULL){
+				/*no caso de nao encontrar, marca o inicio da palavra com o flagIni = 1*/
+				if (flagIni == 0){
+					/*inicializa o endPos onde comeca a palavra*/
+					endPos = iniPos;
+					flagIni = 1;
+				}
+			}else{
+				/*no caso de encotrar um separador marcando o fim da palavra*/
+				if (flagIni == 1){
+					/*por boas praticas, sinaliza o fim na flagEnd e ja passa o ponteiro para o proximo caracter, afinal este eh separador*/
+					flagEnd = 1;
+					*str++;
+					break;
+				}
+			}
+			/*verifica qual posicao esta marcando, do inicio ou do fim*/
+			if (flagIni == 0){
+				iniPos++;
+			}else{
+				endPos++;
+			}
+			*str++;
+		}
+		/*calcula o tamanho nescessario para guardar a palavra + o sentinela \0*/
+		sizeReturn = (endPos - iniPos)+1;
+		/*aloca e depois ja insere o sentinela*/
+		returnStr = (char*)malloc(sizeof(char)*sizeReturn);
+		returnStr[sizeReturn-1] = '\0';
+		for (i=0,j=iniPos;i<sizeReturn;i++,j++){
+			returnStr[i] = *str[j];
+		}
+	}
+
+	return returnStr;
+}
+
+char *getConfig(char *inf){
+	char *auxStr,*auxInf;
+	int numChars;
+	char auxChar;
+	FILE *p;
+	p = fopen("ini.conf","r");
+	if (!p){
+		return NULL;
+	}
+	numChars = countCharsFile("ini.conf");
+	auxStr = (char*)malloc(sizeof(char)*(numChars+1));
+	auxStr[0] = '\0';
+	while ((auxChar = getc(p)) != EOF){
+		if ((auxChar!='\n') && (auxChar!=' ')){
+			strcat(auxStr,auxChar);
+		}else{
+			strcat(auxStr,'|');
+		}
+	}
+	auxInf = NULL;
+	do{
+		if (auxInf != NULL){
+			free(auxInf);
+		}
+		auxInf = sepString(&auxStr,'|');
+	}while (strcmp(inf,auxInf)!=0);
+	free(auxInf);
+	return sepString(&auxStr,'|');
+}
+
