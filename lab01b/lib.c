@@ -335,7 +335,7 @@ char ***loadMessages(char *lang){
      filePath = (char*)malloc(sizeof(char)*LANGFILEPATHSIZE);
      strcat(filePath,"./lang/");
      strcat(filePath,lang);
-     strcat(filePath,".txt");
+     strcat(filePath,".lan");
 
      p = fopen(filePath,"r");
      if (!p){
@@ -358,11 +358,15 @@ char ***loadMessages(char *lang){
      /*agora comeca a leitura, entao ja reserva o espaco para os dois vetores de vetores de caracteres*/
      allMessages = (char***)malloc(sizeof(char**)*2);
      /*reserva o espaço para cada vetor de vetores de caracteres*/
-     allMessages[MSG] = (char**)malloc(sizeof(char*)*(numMessages+1));
-     allMessages[ERR] = (char**)malloc(sizeof(char*)*(numErrors+1));
-     allMessages[MSG][numMessages] = NULL;
-     allMessages[ERR][numErrors] = NULL;
-     for (i=0;i<numMessages;i++){
+     allMessages[MSG] = (char**)malloc(sizeof(char*)*(numMessages+2));
+     allMessages[ERR] = (char**)malloc(sizeof(char*)*(numErrors+2));
+     allMessages[MSG][numMessages+1] = NULL;
+     allMessages[ERR][numErrors+1] = NULL;
+     allMessages[ERR][0] = (char*)malloc(sizeof(char));
+     allMessages[MSG][0] = (char*)malloc(sizeof(char));     
+     allMessages[ERR][0] = (char)numMessages;
+     allMessages[MSG][0] = (char)numErrors;
+     for (i=1;i<numMessages+1;i++){
          allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
          j = 0;
          while ((auxChar = getc(p))!='\n'){
@@ -370,7 +374,7 @@ char ***loadMessages(char *lang){
          }
          
      }
-     for (i=0;i<numErrors;i++){
+     for (i=1;i<numErrors+1;i++){
          allMessages[ERR][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
          j = 0;
          while ((auxChar = getc(p))!='\n'){
@@ -380,4 +384,18 @@ char ***loadMessages(char *lang){
      return allMessages;
 }
 
-
+void printMsg(char ***allMessages, int typeId, int msgId){
+     int auxSize;
+     if (allMessages!=NULL){
+        if ((typeId == MSG)||(typeId==ERR)){
+           if (allMessages[typeId]!=NULL){
+              if (allMessages[typeId][msgId]!=NULL){
+                 auxSize = (int)allMessages[typeId][msgId];
+                 if (msgId<=auxSize){
+                    printf("%s\n\n",allMessages[typeId][msgId]);
+                 }
+              }
+           }
+        }
+     }
+}

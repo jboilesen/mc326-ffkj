@@ -150,4 +150,15 @@ Feita por: Jonathan Nunes Boilesen
 18:30 p.m. 22/03/2009*/
 char ***loadMessages(char *);
 
+/*Funcao que anda ate o final de uma string em um arquivo e retorna o numero de caracteres que ela tem
+Recebe o valor do arquivo file e do separador desejado
+ex: p = fopen(...);
+    fileStringSize( *p, ...);
+Feita por: Fernando Thiers
+19:30 p.m. 22/03/2009    */
 int fileStringSize( FILE , char );
+
+/*Funcao que recebe o vetor com as msgs, o tipo (ERR,MSG) e o indice da msg desejada
+Feita por: Jonathan Nunes Boilesen
+20:32 p.m. 22/03/2009*/
+void printMsg(char , int, int);
