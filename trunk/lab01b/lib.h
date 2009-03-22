@@ -112,3 +112,21 @@ int cCount ( char *, char );
  * responsavel: Felipe
  */
 int sCount ( char *, char * );
+
+/* A função returna um ponteiro para a palavra separada
+ * Parâmetros:
+ * -char **str: ponteiro a ser alterado para parar no final de cada palavra separada
+ * -char *SEP: string com os separadores
+ * Feita por: Jonathan Nunes Boilesen
+ * 2:11 a.m. 19/03/2009
+ */
+char *sepString ( char **, char * );
+
+/* Função que busca informações contidas no arquivo de configuração ini.conf
+ * Recebe
+ * -char *inf
+ * Contendo uma string com a informação desejada de retorno
+ * Feita por: Jonathan Nunes Boilesen
+ * 23:00 p.m. 20/03/2009
+ */
+char *getConfig( char * );
