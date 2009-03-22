@@ -29,16 +29,47 @@ Input inputTest(int argc, char *argv[]){
 
 int read_1_file( FILE file, char *sep, char **text, char *c, char **pal ){
 
-	// le o conteudo do aequivo e salva em uma string (como alocar o tamanho certo?)
-	// chama funcao sepString(char **copia_string, char *sep) 3 vezes
-	return 0;
+	char *string, *cp_string, *caracter;
+	int i, stringsize;
 
+	// Le conteúdo do arquivo e armazena em string
+	stringsize = fileStringSize( file, '\n' );
+	string = (char *) malloc( ( stringsize  + 1 ) * sizeof(char) );
+	for( i=0; i<stringsize; i++) string[i] = getc(&file);
+	string[i+1] = '\0';
+	cp_string = string;
+
+	// Armazena text, c, pal usando a função sepString(
+	if( (*text = sepString( &cp_string, sep )) == NULL ) exit(1);
+	
+	if( (caracter = sepString( &cp_string, sep )) == NULL ) exit(1);
+	else{ 
+		c = *caracter;
+		free( caracter );
+	}
+
+	if( (*pal = sepString( &cp_string, sep )) == NULL ) exit(1);
+
+	free(string);
+
+	return 0;
 }
+
+int fileStringSize( FILE file, char sep ){
+
+	int count=0;
+	char aux;
+
+	while( ((aux = getc(&file)) != sep ) && ( aux != EOF ) ) count++;
+
+	return count;
+}
+
 
 int main(int argc, char *argv[]){
 
 	Input input; // Recebe o tipo da entrada
-	char *text, c, *pal, *filename, *sep, *lang, **messages;
+	char *text, c, *pal, *filename, *sep, *lang, ***messages;
 	Word *word;
 	int i;
 	FILE *file;
