@@ -127,7 +127,6 @@ void printWord( Word *list ){
 		printf("%s : %d\n", list->info, list->count);
 		list = list->next;
 	}
-	return 0;
 }
 
 int printFile( Word *iniWord, char *filePath ){
@@ -240,18 +239,17 @@ int countCharsFile(char *filePath){
 	while ((auxChar = getc(p)) != EOF){
 		count++;
 	}
-	fclose(filePath);
+	fclose(p);
 	return count;
 }
 
 char *sepString (char **str, char *SEP){
-	int sizeSEP,iniPos,endPos,flagIni,flagEnd,sizeReturn,i,j;
+	int sizeSEP,iniPos,endPos,flagIni,sizeReturn,i,j;
 	char *returnStr;
 	sizeSEP = strlen(SEP);
 	iniPos = 0;
 	endPos = 0;
 	flagIni = 0;
-	flagEnd = 0;
 	returnStr = NULL;
 	/*verifica o caso dos parametro serem invalidos*/
 	if ((str!=NULL)&&(SEP!=NULL)){
@@ -268,9 +266,7 @@ char *sepString (char **str, char *SEP){
 			}else{
 				/*no caso de encotrar um separador marcando o fim da palavra*/
 				if (flagIni == 1){
-					/*por boas praticas, sinaliza o fim na flagEnd e ja passa o ponteiro para o proximo caracter, afinal este eh separador*/
-					flagEnd = 1;
-					*str++;
+					(*str)++;
 					break;
 				}
 			}
@@ -280,7 +276,7 @@ char *sepString (char **str, char *SEP){
 			}else{
 				endPos++;
 			}
-			*str++;
+			(*str)++;
 		}
 		/*calcula o tamanho nescessario para guardar a palavra + o sentinela \0*/
 		sizeReturn = (endPos - iniPos)+1;
@@ -298,7 +294,8 @@ char *sepString (char **str, char *SEP){
 char *getConfig(char *inf){
      char *auxStr,*auxInf;
      int numChars;
-     char auxChar;
+     char auxChar,auxSep;
+     auxSep = '|';
      FILE *p;
      p = fopen("ini.conf","r");
      if (!p){
@@ -309,9 +306,9 @@ char *getConfig(char *inf){
      auxStr[0] = '\0';
      while ((auxChar = getc(p)) != EOF){
            if ((auxChar!='\n') && (auxChar!=' ')){
-              strcat(auxStr,auxChar);
+              strcat(auxStr,&auxChar);
            }else{
-                 strcat(auxStr,'|');
+                 strcat(auxStr,&auxSep);
            }
      }
      auxInf = NULL;
@@ -319,16 +316,16 @@ char *getConfig(char *inf){
         if (auxInf != NULL){
            free(auxInf);
         }
-        auxInf = sepString(&auxStr,'|');
+        auxInf = sepString(&auxStr,&auxSep);
      }while (strcmp(inf,auxInf)!=0);
      free(auxInf);
-     return sepString(&auxStr,'|');
+     return sepString(&auxStr,&auxSep);
 
 }
 
 char ***loadMessages(char *lang){
      char ***allMessages,*filePath,auxChar;
-     int sizeLangStr,numMessages,numErrors,sizeFileStr,i,j;
+     int sizeLangStr,numMessages,numErrors,i,j;
      FILE *p;
      /*verifica se o parametro passado eh valido*/
      if (sizeLangStr!=4){
@@ -346,7 +343,7 @@ char ***loadMessages(char *lang){
      }
      /*verifica o numero de mensagens contido no texto segundo o cabecalho*/
      fscanf(p,"%d",&numMessages);
-     if (numMessage<=0){
+     if (numMessages<=0){
         return NULL;
      }
      /*caminha até o final da linha*/

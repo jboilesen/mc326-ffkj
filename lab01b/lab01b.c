@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "lib.h"
 
-typedef enum { ERROR , 1_file , text_c_pal } Input;
+typedef enum { ERROR , file , text_c_pal } Input;
 
 // Verifica o tipo de entrada
 Input inputTest(int argc, char *argv[]){ 
@@ -14,7 +14,7 @@ Input inputTest(int argc, char *argv[]){
 			printf("Arquivo não encontrado.\n");
 			return ERROR;
 		}
-		else return 1_file;
+		else return file;
 	}
 	if( argc == 4 ){
 		// Testa se o 3 argumento é um caracter
@@ -27,7 +27,7 @@ Input inputTest(int argc, char *argv[]){
 	return ERROR;
 }
 
-int read_1_file( FILE file, char *sep, char **text, char *c, char **pal ){
+int read_file( FILE file, char *sep, char **text, char *c, char **pal ){
 
 	char *string, *cp_string, *caracter;
 	int i, stringsize;
@@ -44,7 +44,7 @@ int read_1_file( FILE file, char *sep, char **text, char *c, char **pal ){
 	
 	if( (caracter = sepString( &cp_string, sep )) == NULL ) exit(1);
 	else{ 
-		c = *caracter;
+		*c = *caracter;
 		free( caracter );
 	}
 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]){
 	if( lang = getConfig( "LANG" ) == NULL ) exit(1);	
 	
 	// Carrega mensagens do idioma, loadMessages aloca,						FREE!
-	f( messages = loadMessages( lang ) == NULL ) exit(1);
+	if( messages = loadMessages( lang ) == NULL ) exit(1);
 
 	// Entrada do tipo texto+caracter+palavra
 	if( input == text_c_pal ){
