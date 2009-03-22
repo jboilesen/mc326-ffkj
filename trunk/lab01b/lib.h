@@ -15,6 +15,11 @@
 #define CHANGECHR '-'
 #define CHANGECHR2 '_'
 
+#define LANGFILEPATHSIZE 15
+
+#define MSG 0
+#define ERR 1
+
 /* Estrutura da lista de palavras
  * char *info : string com conteudo da palavra
  * int count : quantidade de vezes que a palavra eh repetida
@@ -113,20 +118,27 @@ int cCount ( char *, char );
  */
 int sCount ( char *, char * );
 
-/* A função returna um ponteiro para a palavra separada
- * Parâmetros:
- * -char **str: ponteiro a ser alterado para parar no final de cada palavra separada
- * -char *SEP: string com os separadores
- * Feita por: Jonathan Nunes Boilesen
- * 2:11 a.m. 19/03/2009
- */
-char *sepString ( char **, char * );
+/*A funcao retorna um ponteiro para a palavra separada
+Parametros:
+-char **str: ponteiro a ser alterado para parar no final de cada palavra separada
+-char *SEP: string com os separadores;
+Feita por: Jonathan Nunes Boilesen
+2:11 a.m. 19/03/2009*/
+char *sepString (char **, char *);
 
-/* Função que busca informações contidas no arquivo de configuração ini.conf
- * Recebe
- * -char *inf
- * Contendo uma string com a informação desejada de retorno
- * Feita por: Jonathan Nunes Boilesen
- * 23:00 p.m. 20/03/2009
- */
-char *getConfig( char * );
+/*Funcao que busca as informacoes contidas
+no arquivo de configuracao ini.conf
+Recebe
+-char *inf
+Contendo uma string com a informacao desejada de retorno
+Feita por: Jonathan Nunes Boilesen
+23:00 p.m. 20/03/2009*/
+char *getConfig(char *)
+
+/*Funcao que busca as mensagens de erro e comuns do programa nos arquivos contidos na pasta lang
+Recebe
+-char *lang
+Contendo uma string com a informacao da linguagem utilizada palo programa
+Feita por: Jonathan Nunes Boilesen
+18:30 p.m. 22/03/2009*/
+char ***loadMessages(char *)

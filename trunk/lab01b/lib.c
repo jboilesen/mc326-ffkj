@@ -296,32 +296,91 @@ char *sepString (char **str, char *SEP){
 }
 
 char *getConfig(char *inf){
-	char *auxStr,*auxInf;
-	int numChars;
-	char auxChar;
-	FILE *p;
-	p = fopen("ini.conf","r");
-	if (!p){
-		return NULL;
-	}
-	numChars = countCharsFile("ini.conf");
-	auxStr = (char*)malloc(sizeof(char)*(numChars+1));
-	auxStr[0] = '\0';
-	while ((auxChar = getc(p)) != EOF){
-		if ((auxChar!='\n') && (auxChar!=' ')){
-			strcat(auxStr,auxChar);
-		}else{
-			strcat(auxStr,'|');
-		}
-	}
-	auxInf = NULL;
-	do{
-		if (auxInf != NULL){
-			free(auxInf);
-		}
-		auxInf = sepString(&auxStr,'|');
-	}while (strcmp(inf,auxInf)!=0);
-	free(auxInf);
-	return sepString(&auxStr,'|');
+     char *auxStr,*auxInf;
+     int numChars;
+     char auxChar;
+     FILE *p;
+     p = fopen("ini.conf","r");
+     if (!p){
+        return NULL;
+     }
+     numChars = countCharsFile("ini.conf");
+     auxStr = (char*)malloc(sizeof(char)*(numChars+1));
+     auxStr[0] = '\0';
+     while ((auxChar = getc(p)) != EOF){
+           if ((auxChar!='\n') && (auxChar!=' ')){
+              strcat(auxStr,auxChar);
+           }else{
+                 strcat(auxStr,'|');
+           }
+     }
+     auxInf = NULL;
+     do{
+        if (auxInf != NULL){
+           free(auxInf);
+        }
+        auxInf = sepString(&auxStr,'|');
+     }while (strcmp(inf,auxInf)!=0);
+     free(auxInf);
+     return sepString(&auxStr,'|');
+
 }
+
+char ***loadMessages(char *lang){
+     char ***allMessages,*filePath,auxChar;
+     int sizeLangStr,numMessages,numErrors,sizeFileStr,i,j;
+     FILE *p;
+     /*verifica se o parametro passado eh valido*/
+     if (sizeLangStr!=4){
+        return NULL;
+     }
+     /*monta o caminho do arquivo*/
+     filePath = (char*)malloc(sizeof(char)*LANGFILEPATHSIZE);
+     strcat(filePath,"./lang/");
+     strcat(filePath,lang);
+     strcat(filePath,".txt");
+
+     p = fopen(filePath,"r");
+     if (!p){
+        return NULL;
+     }
+     /*verifica o numero de mensagens contido no texto segundo o cabecalho*/
+     fscanf(p,"%d",&numMessages);
+     if (numMessage<=0){
+        return NULL;
+     }
+     /*caminha até o final da linha*/
+     /*verifica o numero de mensagens de erro segundo o cabecalho*/
+     while (getc(p)!='\n');
+     fscanf(p,"%d",&numErrors);
+     if (numErrors<=0){
+        return NULL;
+     }
+     /*caminha até o final da linha*/
+     while (getc(p)!='\n');
+     /*agora comeca a leitura, entao ja reserva o espaco para os dois vetores de vetores de caracteres*/
+     allMessages = (char***)malloc(sizeof(char**)*2);
+     /*reserva o espaço para cada vetor de vetores de caracteres*/
+     allMessages[MSG] = (char**)malloc(sizeof(char*)*(numMessages+1));
+     allMessages[ERR] = (char**)malloc(sizeof(char*)*(numErrors+1));
+     allMessages[MSG][numMessages] = NULL;
+     allMessages[ERR][numErrors] = NULL;
+     for (i=0;i<numMessages;i++){
+         allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
+         j = 0;
+         while ((auxChar = getc(p))!='\n'){
+               allMessages[MSG][i][j] = auxChar;
+         }
+         
+     }
+     for (i=0;i<numErrors;i++){
+         allMessages[ERR][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
+         j = 0;
+         while ((auxChar = getc(p))!='\n'){
+               allMessages[ERR][i][j] = auxChar;
+         }
+     }
+     return allMessages;
+}
+
 
