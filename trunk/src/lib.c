@@ -239,14 +239,24 @@ int sCount(char *text, char *pal){
     return n;
 }
 
-/*A funcao retorna um ponteiro para a palavra separada
-Parametros:
--char **str: ponteiro a ser alterado para parar no final de cada palavra separada
--char *SEP: string com os separadores;
-Feita por: Jonathan Nunes Boilesen
-2:11 a.m. 19/03/2009*/
+int countCharsFile(char *filePath){
+    char auxChar;
+    int count;
+    count = 0;
+    FILE *p;
+    p = fopen(filePath,"r");
+    if (!p){
+       return -1;
+    }
+    while ((auxChar = getc(p)) != EOF){
+          count++;
+    }
+    fclose(filePath);
+    return count;
+}
+
 char *sepString (char **str, char *SEP){
-	int sizeSEP,iniPos,endPos,flagIni,flagEnd,sizeReturn;
+	int sizeSEP,iniPos,endPos,flagIni,flagEnd,sizeReturn,i,j;
 	char *returnStr;
 	sizeSEP = strlen(SEP);
 	iniPos = 0;
@@ -287,8 +297,41 @@ char *sepString (char **str, char *SEP){
 		sizeReturn = (endPos - iniPos)+1;
 		/*aloca e depois ja insere o sentinela*/
 		returnStr = (char*)malloc(sizeof(char)*sizeReturn);
-		returnStr[sizeReturn-1] = '\0';		
+		returnStr[sizeReturn-1] = '\0';
+		for (i=0,j=iniPos;i<sizeReturn;i++,j++){
+            returnStr[i] = *str[j];
+        }
 	}
 
 	return returnStr;
+}
+char *getConfig(char *inf){
+     char *auxStr,*auxInf;
+     int numChars;
+     char auxChar;
+     FILE *p;
+     p = fopen("ini.conf","r");
+     if (!p){
+        return NULL;
+     }
+     numChars = countCharsFile("ini.conf");
+     auxStr = (char*)malloc(sizeof(char)*(numChars+1));
+     auxStr[0] = '\0';
+     while ((auxChar = getc(p)) != EOF){
+           if ((auxChar!='\n') && (auxChar!=' ')){
+              strcat(auxStr,auxChar);
+           }else{
+                 strcat(auxStr,'|');
+           }
+     }
+     auxInf = NULL;
+     do{
+        if (auxInf != NULL){
+           free(auxInf);
+        }
+        auxInf = sepString(&auxStr,'|');
+     }while (strcmp(inf,auxInf)!=0);
+     free(auxInf);
+     return sepString(&auxStr,'|');
+
 }
