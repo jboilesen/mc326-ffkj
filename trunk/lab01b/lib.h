@@ -72,6 +72,13 @@ int blankSplit( char*, Word** );
  */
 int wordCount( Word** );
 
+/* Apaga um elemento de uma lista de Words
+ * parametro 1: lista de Words
+ * parametro 2: elemento a ser deletado
+ * responsavel Fernando
+ */
+int delWord( Word*, Word** );
+
 /* Imprime o arquivo de palavras da lista de Word
  * parametro 1: Lista de Word
  * parametro 2: nome do arquivo a ser gerado
@@ -133,7 +140,7 @@ Recebe
 Contendo uma string com a informacao desejada de retorno
 Feita por: Jonathan Nunes Boilesen
 23:00 p.m. 20/03/2009*/
-char *getConfig(char *)
+char *getConfig(char *);
 
 /*Funcao que busca as mensagens de erro e comuns do programa nos arquivos contidos na pasta lang
 Recebe
@@ -141,4 +148,6 @@ Recebe
 Contendo uma string com a informacao da linguagem utilizada palo programa
 Feita por: Jonathan Nunes Boilesen
 18:30 p.m. 22/03/2009*/
-char ***loadMessages(char *)
+char ***loadMessages(char *);
+
+int fileStringSize( FILE , char );
