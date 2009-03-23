@@ -301,6 +301,7 @@ char *getConfig(char *inf){
      if (!p){
         return NULL;
      }
+printf(" 111 !! ");
      numChars = countCharsFile("ini.conf");
      auxStr = (char*)malloc(sizeof(char)*(numChars+1));
      auxStr[0] = '\0';
@@ -317,10 +318,13 @@ char *getConfig(char *inf){
         if (auxInf != NULL){
            free(auxInf);
         }
-        auxInf = toUpper(sepString(auxStr,&auxSep));
+printf("!!!!");
+        auxInf = (sepString(&auxStr,&auxSep));
+	toUpper(auxInf);
      }while (strcmp(inf,auxInf)!=0);
      free(auxInf);
-     return sepString(auxStr,&auxSep);
+printf("aqui!");
+     return sepString(&auxStr,&auxSep);
 
 }
 

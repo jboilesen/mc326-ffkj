@@ -56,7 +56,8 @@ int fileStringSize( FILE file, char sep ){
 	int count=0;
 	char aux;
 
-	while( ((aux = getc(&file)) != sep ) && ( aux != EOF ) ) count++;
+	aux = getc(&file)
+	while( ( aux != sep ) && ( aux != '\n' ) && ( aux != EOF )  ) count++;
 
 	return count;
 }
@@ -68,13 +69,15 @@ int main(int argc, char *argv[]){
 	char *text, c, *pal, *filename, *sep, *lang, ***messages;
 	Word *word;
 	FILE *file;
-
+printf("antes do getconfig");
 	// Le idioma do arquivo de configuração, getConfig aloca,                   		 	LEMBRAR DE DAR O FREE
 	lang = getConfig( "LANG" );
+printf("passo do getconfig");
 	if( lang == NULL ){
 		printf("ERROR! The program could not read the language from the configuration file.\n\n");
 		exit(1);
 	}
+printf("leu idioma\n");
 	
 	// Carrega mensagens do idioma, loadMessages aloca,						FREE!
 	messages = loadMessages( lang );
@@ -83,6 +86,7 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 	printMsg( messages, MSG, 1 );
+printf("carrega mensagens\n");
 
 	// Verificação da entrada
 	input = inputTest(argc, argv);
@@ -90,6 +94,7 @@ int main(int argc, char *argv[]){
 		printMsg( messages, ERR, 1 ); // "Arquivo não encontrado ou entrada em formato incompativel"
 		exit(1);
 	}
+printf("verificou entrada\n");
 
 	// Le string de separadores do arquivo de configuração, getConfig aloca,     	 		LEMBRAR DE DAR O FREE
 	sep = getConfig( "SEP" );
@@ -97,6 +102,7 @@ int main(int argc, char *argv[]){
 		printMsg( messages, ERR, 2 ); // "ERRO! Arquivo de configuracao mal formatado.
 		exit(1);
 	}
+printf("leu SEP\n");
 
 	// Entrada do tipo texto+caracter+palavra
 	if( input == text_c_pal ){
