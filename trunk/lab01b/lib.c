@@ -364,8 +364,8 @@ char ***loadMessages(char *lang){
      allMessages[ERR][numErrors+1] = NULL;
      allMessages[ERR][0] = (char*)malloc(sizeof(char));
      allMessages[MSG][0] = (char*)malloc(sizeof(char));     
-     allMessages[ERR][0] = (char)numMessages;
-     allMessages[MSG][0] = (char)numErrors;
+     *allMessages[ERR][0] = (char)numMessages;
+     *(allMessages[MSG][0]) = (char)numErrors;
      for (i=1;i<numMessages+1;i++){
          allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
          j = 0;
