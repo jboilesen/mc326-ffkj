@@ -292,10 +292,9 @@ char *sepString (char **str, char *SEP){
 }
 
 char *getConfig(char *inf){
-     char *auxStr,*auxInf;
+     char *auxStr;
      int numChars;
-     char auxChar,auxSep;
-     auxSep = '|';
+     char auxChar;
      FILE *p;
      p = fopen("ini.conf","r");
      if (!p){
