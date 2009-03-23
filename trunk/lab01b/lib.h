@@ -156,7 +156,7 @@ ex: p = fopen(...);
     fileStringSize( *p, ...);
 Feita por: Fernando Thiers
 19:30 p.m. 22/03/2009    */
-int fileStringSize( FILE , char );
+int fileStringSize( FILE *, char );
 
 /*Funcao que recebe o vetor com as msgs, o tipo (ERR,MSG) e o indice da msg desejada
 Feita por: Jonathan Nunes Boilesen

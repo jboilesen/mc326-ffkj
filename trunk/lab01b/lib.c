@@ -35,7 +35,7 @@ void toBlank( char *string, char *separators ){
 
 int toUpper( char *string ) {
 
-	int cont;
+	int cont=0;
 
 	while( *string != '\0' ){
 		if( *string >= 'a' && *string <= 'z' ){
@@ -293,8 +293,7 @@ char *sepString (char **str, char *SEP){
 
 char *getConfig(char *inf){
      char *auxStr;
-     int numChars;
-     char auxChar;
+     int numChars, flag;
      FILE *p;
      p = fopen("ini.conf","r");
      if (!p){
@@ -303,7 +302,7 @@ char *getConfig(char *inf){
      flag = 0;
      toUpper(inf);
      do{
-        numChars = fileStringSize(*p,' ');
+        numChars = fileStringSize(p,' ');
         auxStr = (char*)malloc(sizeof(char)*numChars);
         if (fscanf(p,"%s",auxStr)==EOF){
            flag = 1;
@@ -311,7 +310,7 @@ char *getConfig(char *inf){
         toUpper(auxStr);
         if (strcmp(inf,auxStr)==0){
            flag = 2;
-           numChars = fileStringSize(*p,' ');
+           numChars = fileStringSize(p,' ');
            free(auxStr);
            auxStr = (char*)malloc(sizeof(char)*numChars);
            fscanf(p,"%s",auxStr);
@@ -327,6 +326,7 @@ char ***loadMessages(char *lang){
      int sizeLangStr,numMessages,numErrors,i,j;
      FILE *p;
      /*verifica se o parametro passado eh valido*/
+	sizeLangStr = strlen(lang);
      if (sizeLangStr!=4){
         return NULL;
      }
@@ -366,7 +366,7 @@ char ***loadMessages(char *lang){
      *allMessages[ERR][0] = (char)numMessages;
      *(allMessages[MSG][0]) = (char)numErrors;
      for (i=1;i<numMessages+1;i++){
-         allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
+         allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(p,'\n'));
          j = 0;
          while ((auxChar = getc(p))!='\n'){
                allMessages[MSG][i][j] = auxChar;
@@ -374,7 +374,7 @@ char ***loadMessages(char *lang){
          
      }
      for (i=1;i<numErrors+1;i++){
-         allMessages[ERR][i] = (char*)malloc(sizeof(char)*fileStringSize(*p,'\n'));
+         allMessages[ERR][i] = (char*)malloc(sizeof(char)*fileStringSize(p,'\n'));
          j = 0;
          while ((auxChar = getc(p))!='\n'){
                allMessages[ERR][i][j] = auxChar;

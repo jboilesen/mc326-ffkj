@@ -1,12 +1,13 @@
 /*lab01.c */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include "lib.h"
 
 typedef enum { ERROR , t_file , text_c_pal } Input;
 
 // Verifica o tipo de entrada
-Input inputTest(int argc, char *argv[]){ 
+Input inputTest(int argc, char **argv){ 
 
 	FILE *file;
 
@@ -29,7 +30,7 @@ int read_file( FILE *file, char *sep, char **text, char *c, char **pal ){
 	int i, stringsize;
 
 	// Le conteudo do arquivo e armazena em string
-	stringsize = fileStringSize( *file, '\n' );
+	stringsize = fileStringSize( file, '\n' );
 	string = (char *) malloc( ( stringsize  + 1 ) * sizeof(char) );
 	for( i=0; i<stringsize; i++) string[i] = getc(file);
 	string[i+1] = '\0';
@@ -51,33 +52,33 @@ int read_file( FILE *file, char *sep, char **text, char *c, char **pal ){
 	return 0;
 }
 
-int fileStringSize( FILE file, char sep ){
+int fileStringSize( FILE *file, char sep ){
 
 	int count=0;
 	char aux;
 
-	aux = getc(&file);
-	while( ( aux != sep ) && ( aux != '\n' ) && ( aux != EOF )  ) count++;
+	aux = getc(file);
+	while( ( aux != sep ) && ( aux != '\n' ) && ( aux != EOF )  ){
+		count++;
+		aux = getc(file);
+	}
 
 	return count;
 }
-
-
 int main(int argc, char *argv[]){
 
-	Input input; // Recebe o tipo da entrada
+	int input; // Recebe o tipo da entrada
 	char *text, c, *pal, *filename, *sep, *lang, ***messages;
 	Word *word;
 	FILE *file;
-printf("antes do getconfig");
+
 	// Le idioma do arquivo de configuração, getConfig aloca,	 	LEMBRAR DE DAR O FREE
 	lang = getConfig( "LANG" );
-printf("passo do getconfig");
+
 	if( lang == NULL ){
 		printf("ERROR! The program could not read the language from the configuration file.\n\n");
 		exit(1);
 	}
-printf("leu idioma\n");
 	
 	// Carrega mensagens do idioma, loadMessages aloca,	FREE!
 	messages = loadMessages( lang );
@@ -86,15 +87,13 @@ printf("leu idioma\n");
 		exit(1);
 	}
 	printMsg( messages, MSG, 1 );
-printf("carrega mensagens\n");
 
 	// Verificação da entrada
 	input = inputTest(argc, argv);
-	if( input == 0 ){
+	if( input == ERROR ){
 		printMsg( messages, ERR, 1 ); // "Arquivo não encontrado ou entrada em formato incompativel"
 		exit(1);
 	}
-printf("verificou entrada\n");
 
 	// Le string de separadores do arquivo de configuração, getConfig aloca,     	 		LEMBRAR DE DAR O FREE
 	sep = getConfig( "SEP" );
@@ -102,7 +101,6 @@ printf("verificou entrada\n");
 		printMsg( messages, ERR, 2 ); // "ERRO! Arquivo de configuracao mal formatado.
 		exit(1);
 	}
-printf("leu SEP\n");
 
 	// Entrada do tipo texto+caracter+palavra
 	if( input == text_c_pal ){
@@ -116,7 +114,7 @@ printf("leu SEP\n");
 		strcpy( pal, argv[3] );
 	}
 	// Entrada do tipo arquivo
-	if( input == t_file ){
+	if( input == 1 ){
 		// Abre o arquivo, le entrada, fecha o arquivo
 		file = fopen( argv[1], "r" );
 		if( read_file( file, sep, &text, &c, &pal ) == 0 ){
@@ -171,3 +169,4 @@ printf("leu SEP\n");
 
 	return 0;
 }
+
