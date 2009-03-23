@@ -56,7 +56,7 @@ int fileStringSize( FILE file, char sep ){
 	int count=0;
 	char aux;
 
-	aux = getc(&file)
+	aux = getc(&file);
 	while( ( aux != sep ) && ( aux != '\n' ) && ( aux != EOF )  ) count++;
 
 	return count;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 	Word *word;
 	FILE *file;
 printf("antes do getconfig");
-	// Le idioma do arquivo de configuração, getConfig aloca,                   		 	LEMBRAR DE DAR O FREE
+	// Le idioma do arquivo de configuração, getConfig aloca,	 	LEMBRAR DE DAR O FREE
 	lang = getConfig( "LANG" );
 printf("passo do getconfig");
 	if( lang == NULL ){
@@ -79,7 +79,7 @@ printf("passo do getconfig");
 	}
 printf("leu idioma\n");
 	
-	// Carrega mensagens do idioma, loadMessages aloca,						FREE!
+	// Carrega mensagens do idioma, loadMessages aloca,	FREE!
 	messages = loadMessages( lang );
 	if( messages == NULL ){
 		printf("ERROR! The program could not read the language file.\n\n");
