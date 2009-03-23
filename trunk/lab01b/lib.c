@@ -301,31 +301,26 @@ char *getConfig(char *inf){
      if (!p){
         return NULL;
      }
-printf(" 111 !! ");
-     numChars = countCharsFile("ini.conf");
-     auxStr = (char*)malloc(sizeof(char)*(numChars+1));
-     auxStr[0] = '\0';
-     while ((auxChar = getc(p)) != EOF){
-           if ((auxChar!='\n') && (auxChar!=' ')){
-              strcat(auxStr,&auxChar);
-           }else{
-                 strcat(auxStr,&auxSep);
-           }
-     }
+     flag = 0;
      toUpper(inf);
-     auxInf = NULL;
      do{
-        if (auxInf != NULL){
-           free(auxInf);
+        numChars = fileStringSize(*p,' ');
+        auxStr = (char*)malloc(sizeof(char)*numChars);
+        if (fscanf(p,"%s",auxStr)==EOF){
+           flag = 1;
+        }else{
+        toUpper(auxStr);
+        if (strcmp(inf,auxStr)==0){
+           flag = 2;
+           numChars = fileStringSize(*p,' ');
+           free(auxStr);
+           auxStr = (char*)malloc(sizeof(char)*numChars);
+           fscanf(p,"%s",auxStr);
+           return auxStr;
         }
-printf("!!!!");
-        auxInf = (sepString(&auxStr,&auxSep));
-	toUpper(auxInf);
-     }while (strcmp(inf,auxInf)!=0);
-     free(auxInf);
-printf("aqui!");
-     return sepString(&auxStr,&auxSep);
-
+        }
+     }while ((flag!=1)&&(flag!=2));
+     return NULL;
 }
 
 char ***loadMessages(char *lang){
