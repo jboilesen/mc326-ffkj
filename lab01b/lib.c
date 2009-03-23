@@ -292,109 +292,120 @@ char *sepString (char **str, char *SEP){
 }
 
 char *getConfig(char *inf){
-     char *auxStr;
-     int numChars, flag;
-     FILE *p;
-     p = fopen("ini.conf","r");
-     if (!p){
-        return NULL;
-     }
-     flag = 0;
-     toUpper(inf);
-     do{
-        numChars = fileStringSize(p,' ');
-        auxStr = (char*)malloc(sizeof(char)*numChars);
-        if (fscanf(p,"%s",auxStr)==EOF){
-           flag = 1;
-        }else{
-        toUpper(auxStr);
-        if (strcmp(inf,auxStr)==0){
-           flag = 2;
-           numChars = fileStringSize(p,' ');
-           free(auxStr);
-           auxStr = (char*)malloc(sizeof(char)*numChars);
-           fscanf(p,"%s",auxStr);
-           return auxStr;
-        }
-        }
-     }while ((flag!=1)&&(flag!=2));
-     return NULL;
+	char *auxStr;
+	int numChars, flag;
+	FILE *p;
+	p = fopen("ini.conf","r");
+	if (!p){
+		return NULL;
+	}
+	flag = 0;
+	toUpper(inf);
+	do{
+		numChars = fileStringSize(p,' ');
+		auxStr = (char*)malloc(sizeof(char)*numChars);
+		if (fscanf(p,"%s",auxStr)==EOF){
+			flag = 1;
+		}else{
+			toUpper(auxStr);
+			if (strcmp(inf,auxStr)==0){
+				flag = 2;
+				numChars = fileStringSize(p,' ');
+				free(auxStr);
+				auxStr = (char*)malloc(sizeof(char)*numChars);
+				fscanf(p,"%s",auxStr);
+				return auxStr;
+			}
+		}
+	}while ((flag!=1)&&(flag!=2));
+	return NULL;
 }
 
 char ***loadMessages(char *lang){
-     char ***allMessages,*filePath,auxChar;
-     int sizeLangStr,numMessages,numErrors,i,j;
-     FILE *p;
-     /*verifica se o parametro passado eh valido*/
+	char ***allMessages,*filePath,auxChar;
+	int sizeLangStr,numMessages,numErrors,i,j;
+	FILE *p, *p_aux;
+	/*verifica se o parametro passado eh valido*/
 	sizeLangStr = strlen(lang);
-     if (sizeLangStr!=4){
-        return NULL;
-     }
-     /*monta o caminho do arquivo*/
-     filePath = (char*)malloc(sizeof(char)*LANGFILEPATHSIZE);
-     strcat(filePath,"./lang/");
-     strcat(filePath,lang);
-     strcat(filePath,".lan");
+	if (sizeLangStr!=4){
+		return NULL;
+	}
+	/*monta o caminho do arquivo*/
+	filePath = (char*)malloc(sizeof(char)*LANGFILEPATHSIZE);
+	strcat(filePath,"./lang/");
+	strcat(filePath,lang);
+	strcat(filePath,".lan");
 
-     p = fopen(filePath,"r");
-     if (!p){
-        return NULL;
-     }
-     /*verifica o numero de mensagens contido no texto segundo o cabecalho*/
-     fscanf(p,"%d",&numMessages);
-     if (numMessages<=0){
-        return NULL;
-     }
-     /*caminha até o final da linha*/
-     /*verifica o numero de mensagens de erro segundo o cabecalho*/
-     while (getc(p)!='\n');
-     fscanf(p,"%d",&numErrors);
-     if (numErrors<=0){
-        return NULL;
-     }
-     /*caminha até o final da linha*/
-     while (getc(p)!='\n');
-     /*agora comeca a leitura, entao ja reserva o espaco para os dois vetores de vetores de caracteres*/
-     allMessages = (char***)malloc(sizeof(char**)*2);
-     /*reserva o espaço para cada vetor de vetores de caracteres*/
-     allMessages[MSG] = (char**)malloc(sizeof(char*)*(numMessages+2));
-     allMessages[ERR] = (char**)malloc(sizeof(char*)*(numErrors+2));
-     allMessages[MSG][numMessages+1] = NULL;
-     allMessages[ERR][numErrors+1] = NULL;
-     allMessages[ERR][0] = (char*)malloc(sizeof(char));
-     allMessages[MSG][0] = (char*)malloc(sizeof(char));     
-     *allMessages[ERR][0] = (char)numMessages;
-     *(allMessages[MSG][0]) = (char)numErrors;
-     for (i=1;i<numMessages+1;i++){
-         allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(p,'\n'));
-         j = 0;
-         while ((auxChar = getc(p))!='\n'){
-               allMessages[MSG][i][j] = auxChar;
-         }
-         
-     }
-     for (i=1;i<numErrors+1;i++){
-         allMessages[ERR][i] = (char*)malloc(sizeof(char)*fileStringSize(p,'\n'));
-         j = 0;
-         while ((auxChar = getc(p))!='\n'){
-               allMessages[ERR][i][j] = auxChar;
-         }
-     }
-     return allMessages;
+	p = fopen(filePath,"r");
+	if (!p){
+		return NULL;
+	}
+	/*verifica o numero de mensagens contido no texto segundo o cabecalho*/
+	fscanf(p,"%d",&numMessages);
+	if (numMessages<=0){
+		return NULL;
+	}
+	/*caminha até o final da linha*/
+	do{
+		auxChar = getc(p);
+	}while(auxChar != '\n');
+	/*verifica o numero de mensagens de erro segundo o cabecalho*/
+	fscanf(p,"%d",&numErrors);
+	if (numErrors<=0){
+		return NULL;
+	}
+	/*caminha até o final da linha*/
+	do{
+		auxChar = getc(p);
+	}while(auxChar != '\n');
+puts("caralho!");
+	/*agora comeca a leitura, entao ja reserva o espaco para os dois vetores de vetores de caracteres*/
+	allMessages = (char***)malloc(sizeof(char**)*2);
+	/*reserva o espaço para cada vetor de vetores de caracteres*/
+	allMessages[MSG] = (char**)malloc(sizeof(char*)*(numMessages+2));
+	allMessages[ERR] = (char**)malloc(sizeof(char*)*(numErrors+2));
+	allMessages[MSG][numMessages+1] = NULL;
+	allMessages[ERR][numErrors+1] = NULL;
+	allMessages[ERR][0] = (char*)malloc(sizeof(char));
+	allMessages[MSG][0] = (char*)malloc(sizeof(char));     
+	*allMessages[ERR][0] = (char)numMessages;
+	*(allMessages[MSG][0]) = (char)numErrors;
+
+printf("\nnumMessages = %d\nnumErrors = %d\n", numMessages,numErrors);
+
+	for (i=1; i < (numMessages+1); i++ ){
+		allMessages[MSG][i] = (char*)malloc(sizeof(char)*fileStringSize(p,'\n'));
+		j = 0;
+		do{
+			auxChar = getc(p);
+			if( auxChar != '\n' ) allMessages[MSG][i][j++] = auxChar;
+		}while( auxChar!='\n' );
+		allMessages[MSG][i][j]='\0';
+	}
+	for (i=1; i < (numErrors+1); i++ ){
+		allMessages[ERR][i] = (char*)malloc(sizeof(char)*fileStringSize(p,'\n'));
+		j = 0;
+		do{
+			auxChar = getc(p);
+			if( auxChar != '\n' ) allMessages[ERR][i][j++] = auxChar;
+		}while(auxChar !='\n' );
+		allMessages[ERR][i][j]='\0';
+	}
+	return allMessages;
 }
 
 void printMsg(char ***allMessages, int typeId, int msgId){
-     int auxSize;
-     if (allMessages!=NULL){
-        if ((typeId == MSG)||(typeId==ERR)){
-           if (allMessages[typeId]!=NULL){
-              if (allMessages[typeId][msgId]!=NULL){
-                 auxSize = (int)allMessages[typeId][msgId];
-                 if (msgId<=auxSize){
-                    printf("%s\n\n",allMessages[typeId][msgId]);
-                 }
-              }
-           }
-        }
-     }
+	int auxSize;
+	if (allMessages!=NULL){
+		if ((typeId == MSG)||(typeId==ERR)){
+			if (allMessages[typeId]!=NULL){
+				if (allMessages[typeId][msgId]!=NULL){
+					auxSize = (int)allMessages[typeId][0];
+					if (msgId<=auxSize){
+						printf("%s\n\n",allMessages[typeId][msgId]);
+					}
+				}
+			}
+		}
+	}
 }

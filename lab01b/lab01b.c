@@ -1,6 +1,5 @@
 /*lab01.c */
 
-#include <stdlib.h>
 #include <stdio.h>
 #include "lib.h"
 
@@ -67,7 +66,7 @@ int fileStringSize( FILE *file, char sep ){
 }
 int main(int argc, char *argv[]){
 
-	int input; // Recebe o tipo da entrada
+	Input input; // Recebe o tipo da entrada
 	char *text, c, *pal, *filename, *sep, *lang, ***messages;
 	Word *word;
 	FILE *file;
@@ -114,7 +113,7 @@ int main(int argc, char *argv[]){
 		strcpy( pal, argv[3] );
 	}
 	// Entrada do tipo arquivo
-	if( input == 1 ){
+	if( input == t_file ){
 		// Abre o arquivo, le entrada, fecha o arquivo
 		file = fopen( argv[1], "r" );
 		if( read_file( file, sep, &text, &c, &pal ) == 0 ){
@@ -169,4 +168,3 @@ int main(int argc, char *argv[]){
 
 	return 0;
 }
-
