@@ -311,15 +311,16 @@ char *getConfig(char *inf){
                  strcat(auxStr,&auxSep);
            }
      }
+     toUpper(inf);
      auxInf = NULL;
      do{
         if (auxInf != NULL){
            free(auxInf);
         }
-        auxInf = sepString(&auxStr,&auxSep);
+        auxInf = toUpper(sepString(auxStr,&auxSep));
      }while (strcmp(inf,auxInf)!=0);
      free(auxInf);
-     return sepString(&auxStr,&auxSep);
+     return sepString(auxStr,&auxSep);
 
 }
 
