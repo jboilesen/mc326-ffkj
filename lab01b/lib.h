@@ -15,7 +15,7 @@
 #define CHANGECHR '-'
 #define CHANGECHR2 '_'
 
-#define LANGFILEPATHSIZE 15
+#define LANGFILEPATHSIZE 100
 
 #define MSG 0
 #define ERR 1

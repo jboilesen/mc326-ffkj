@@ -51,19 +51,26 @@ int read_file( FILE *file, char *sep, char **text, char *c, char **pal ){
 	return 0;
 }
 
-int fileStringSize( FILE *file, char sep ){
-
-	int count=0;
-	char aux;
-
-	aux = getc(file);
-	while( ( aux != sep ) && ( aux != '\n' ) && ( aux != EOF )  ){
-		count++;
-		aux = getc(file);
-	}
-
-	return count;
+int fileStringSize(FILE *p,char sep){
+    int count = 0;
+    char aux;
+    while (((aux = getc(p))!='\n')&&(aux!=EOF)&&(aux!=sep)&&(aux!='\r')){
+          count++;
+    }
+    switch (aux){
+       case EOF: 
+            fseek(p,-(count),SEEK_CUR);
+       break;
+       case '\n':
+            fseek(p,-(count+2),SEEK_CUR);
+       break;
+       default:
+            fseek(p,-(count+1),SEEK_CUR);
+       break;
+    }
+    return count;
 }
+
 int main(int argc, char *argv[]){
 
 	Input input; // Recebe o tipo da entrada
@@ -78,16 +85,15 @@ int main(int argc, char *argv[]){
 		printf("ERROR! The program could not read the language from the configuration file.\n\n");
 		exit(1);
 	}
-	
-	// Carrega mensagens do idioma, loadMessages aloca,	FREE!
+	printf("LANGUAGE -> %s\n",lang);
+    // Carrega mensagens do idioma, loadMessages aloca,	FREE!
 	messages = loadMessages( lang );
 	if( messages == NULL ){
 		printf("ERROR! The program could not read the language file.\n\n");
 		exit(1);
 	}
 	printMsg( messages, MSG, 1 );
-
-	// Verificação da entrada
+    // Verificação da entrada
 	input = inputTest(argc, argv);
 	if( input == ERROR ){
 		printMsg( messages, ERR, 1 ); // "Arquivo não encontrado ou entrada em formato incompativel"
