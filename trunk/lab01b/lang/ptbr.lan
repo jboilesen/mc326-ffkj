@@ -1,44 +1,18 @@
-13 
-3 
-
+13
+3
 Arquivo de idioma lido com sucesso.
-
 Entrada lida com sucesso.
-
 -> Texto original:
-
 -> Numero de vezes que o caracter se repete no texto:
-
 -> Numero de vezes que a string se repete no texto:
-
 -> Texto em maiusculo:
-
 -> Texto com caracteres especiais transformados em espaco:
-
 -> Numero de palavras no texto:
-
 -> Numero de palavras diferentes no texto:
-
 -> Lista de palavras:
-
 -> Gerando arquivo com a lista de palavras:
-
 -> Arquivo criado.
-
 -> holly shit!
-
 ERRO! Arquivo nao encontrado ou entrada em formato incompativel.
-
 ERRO! Arquivo de configuracao mal formatado.
-
 ERRO! Arquivo de entrada mal formatado.
-
-
-
-
-
-
-
-
-
-
