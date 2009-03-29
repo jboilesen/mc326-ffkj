@@ -319,7 +319,7 @@ char *getConfig(char *inf){
 char ***loadMessages(char *lang){
 	char ***allMessages,*filePath,auxChar;
 	int sizeLangStr,numMessages,numErrors,i,j;
-	FILE *p, *p_aux;
+	FILE *p;//*p_aux;
 	/*verifica se o parametro passado eh valido*/
 	sizeLangStr = strlen(lang);
 	if (sizeLangStr!=4){
@@ -342,7 +342,7 @@ char ***loadMessages(char *lang){
 	if (numMessages<=0){
 		return NULL;
 	}
-	/*caminha até o final da linha*/
+	/*caminha atï¿½ o final da linha*/
 	do{
 		auxChar = getc(p);
 	}while(auxChar != '\n');
@@ -351,13 +351,13 @@ char ***loadMessages(char *lang){
 	if (numErrors<=0){
 		return NULL;
 	}
-	/*caminha até o final da linha*/
+	/*caminha atï¿½ o final da linha*/
 	do{
 		auxChar = getc(p);
 	}while(auxChar != '\n');
 	/*agora comeca a leitura, entao ja reserva o espaco para os dois vetores de vetores de caracteres*/
 	allMessages = (char***)malloc(sizeof(char**)*2);
-	/*reserva o espaço para cada vetor de vetores de caracteres*/
+	/*reserva o espaï¿½o para cada vetor de vetores de caracteres*/
 	allMessages[MSG] = (char**)malloc(sizeof(char*)*(numMessages+2));
 	allMessages[ERR] = (char**)malloc(sizeof(char*)*(numErrors+2));
 	allMessages[MSG][numMessages+1] = NULL;

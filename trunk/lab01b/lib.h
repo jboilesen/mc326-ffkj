@@ -1,11 +1,11 @@
 /*lib.h*/
 
-// Definicioes de bibliotecas
+// Definicoes de bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Definicioes de constantes
+// Definicoes de constantes
 #define SEPARATORS ",;!.?():"
 #define BLANK " "
 
@@ -36,7 +36,7 @@ typedef struct tWord{
 
 
 /* Verifica se o caracter eh alfanumerico
- * paramentro 1: caracter a ser verificado
+ * parametro 1: caracter a ser verificado
  * retorna TRUE caso afirmativo; retorna FALSE caso negativo
  * responsavel Fernando
  */
