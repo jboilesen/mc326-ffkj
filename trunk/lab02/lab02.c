@@ -13,8 +13,35 @@
 #define blank ' '
 #define fimregistro '#'
 
+/*Funcao que le um campo de registro(tamanho fixo) a partir de um arquivo
+-Parametro 1: string a ser preenchida
+-Parametro 2: tamanho da string a ser lida
+-Parametro 3: Contador de numero de caracteres
+-Parametro 4: Arquivo a ser lido
+Contendo uma string com a informacao da linguagem utilizada palo programa
+Feita por: Richard Keller
+16:56 p.m. 29/03/2009*/
+char* leituraCampoFixo(char* word,int size,int* NcaracteresEntrada1, FILE* file){
+        int i;
+        for(i=0;i<size-1;i++){
+                  word[i] = fgetc(file);
+                  *NcaracteresEntrada1 +=1;
+              }
+        word[i]='\0';
+        
+        return word;
+}
 
-void GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* Ncaracteres1)
+/*Funcao que le um arquivo de registro de tamanho fixo e grava em outro arquivo usando separador
+-Parametro 1: arquivo a ser lido
+-Parametro 2: arquivo a ser gravado
+-Parametro 3: Contador de numero de registros
+-Parametro 4: Contador de numero de registros da entrada
+-Parametro 5: Contador de numero de caracteres da saida
+Contendo uma string com a informacao da linguagem utilizada palo programa
+Feita por: Richard Keller
+16:56 p.m. 29/03/2009*/
+void GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* NcaracteresEntrada1, int* Ncaracteres1)
 {
         char ra[RA_size], nome[NOME_size], cidade[CIDADE_size];
         char telres[TELRES_size], telalt[TELALT_size],sexo,curso[CURSO_size], aux;
@@ -22,58 +49,52 @@ void GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* Ncaract
         while(1){//Captura todos os dados dos campos do arquivo 'file' e grava no arquivo 'novo'
         
               //Parte 1 - Leitura
-              for(i=0;i<RA_size-1;i++){
-                  ra[i] = fgetc(file);
-              }
-              ra[i]='\0';
+              
+              strcpy(ra,leituraCampoFixo(ra,RA_size,NcaracteresEntrada1, file));
               //printf("string ra:%s\n",ra);
               
               aux = fgetc(file);
+              *NcaracteresEntrada1 +=1;
               
-              for(i=0;i<NOME_size-1;i++){
-                  nome[i] = fgetc(file);
-              }
-              nome[i]='\0';
+              strcpy(nome,leituraCampoFixo(nome,NOME_size,NcaracteresEntrada1, file));
+
               //printf("size of nome:%d\n",size);
               //printf("string nome:%s\n",nome);
               
-              for(i=0;i<CIDADE_size-1;i++){
-                  cidade[i] = fgetc(file);
-              }
-              cidade[i]='\0';
+              strcpy(cidade,leituraCampoFixo(cidade,CIDADE_size,NcaracteresEntrada1, file));
+
               //printf("string cidade:%s\n",cidade);
               
-              for(i=0;i<TELRES_size-1;i++){
-                  telres[i] = fgetc(file);
-              }
-              telres[i] = '\0';
+              strcpy(telres,leituraCampoFixo(telres,TELRES_size,NcaracteresEntrada1, file));
+
               //printf("string telres:%s\n",telres);
               
               aux = fgetc(file);
               
-              for(i=0;i<TELALT_size-1;i++){
-                  telalt[i] = fgetc(file);
-              }
-              telalt[i] = '\0';
+              strcpy(telalt,leituraCampoFixo(telalt,TELALT_size,NcaracteresEntrada1, file));
+
               //printf("string telalt:%s\n",telalt);
               
               aux = fgetc(file);
+              *NcaracteresEntrada1 +=1;
               
               sexo = fgetc(file);
+              *NcaracteresEntrada1 +=1;
               //printf("string sexo:%c\n",sexo);
               
               aux = fgetc(file);
+              *NcaracteresEntrada1 +=1;
               
-              for(i=0;i<CURSO_size-1;i++){
-                  curso[i] = fgetc(file);
-              }
-              curso[i]='\0';
+              strcpy(curso,leituraCampoFixo(curso,CURSO_size,NcaracteresEntrada1, file));
+
               //printf("string curso:%s\n",curso);
               
               aux = fgetc(file);
+              *NcaracteresEntrada1 +=1;
               //printf("aux:%c\n",aux);
               
               aux = fgetc(file);//Verifica se chegou a um '\n' ou a fim do arquivo
+              *NcaracteresEntrada1 +=1;
               
               //Parte 2 - Escrita
               for(i=0;i<RA_size-1;i++){
@@ -151,20 +172,24 @@ void GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* Ncaract
 int main(int argc, char *argv[]){
         int Nregistro =0;
         int Ncaracteres1 = 0;
+        int NcaracteresEntrada1 =0;
         FILE* file;
         FILE* file1;
         FILE* new;
         file = fopen(argv[1],"r");
         new = fopen(argv[2],"w");
         if(file){
-              GERA_ARQ_COM_SEPARADOR(file, new, &Nregistro, &Ncaracteres1);
+              GERA_ARQ_COM_SEPARADOR(file, new, &Nregistro, &NcaracteresEntrada1, &Ncaracteres1);
               fclose(file);
               fclose(new);
               printf("Numero de registros do arquivo 1: %d\n",Nregistro);
+              printf("Numero de caracteres do arquivo de entrada 1: %d\n",NcaracteresEntrada1);
               printf("Numero de caracteres do arquivo de saida 1: %d\n",Ncaracteres1);
         }
-        else
+        else{
+            //Mensagem de ERRO
             return 1;
+        }
         
 	return 0;
 }
