@@ -15,6 +15,82 @@
 #define TRUE 1
 #define FALSE 0
 
+typedef struct s_register{
+	char ra[RA_size];
+	char nome[NOME_size];
+	char cidade[CIDADE_size];
+	char telres[TELRES_size];
+	char telalt[TELALT_size];
+	char sexo;
+	char curso[CURSO_size];
+} t_register;
+	
+/*
+int gera_arq_comp (File * file, t_register *register ){
+	
+	int count;
+	
+	while(register != NULL){
+		count++;
+		// RA
+		putc('<', file);
+		putc( '8', file );
+		putc('>', file);
+		putc('<', file);
+		putc( '1', file );
+		putc('>', file);
+		fprintf( file, "%d", ra);
+		// Nome
+		putc(verificaTamanho(register->nome)+2 , file);
+		putc('<', file);
+		putc('2', file);
+		putc('>', file);
+		fprintf( file, "%s", register->nome);
+		// Cidade
+		putc( verificaTamanho(register->cidade)+2, file);
+		putc('<', file);
+		putc( '3', file);
+		putc('>', file);
+		fprintf( file, "%s", register->cidade);
+		// Tel Residencial
+		putc( verificaTamanho(register->telres)+2, file);
+		putc('<', file);
+		putc( '4', file);
+		putc('>', file);
+		fprintf( file, "%s", register->telres);
+		// Tel alternativo
+		putc( verificaTamanho(register->telalt)+2, file);
+		putc('<', file);
+		putc( '5', file);
+		putc('>', file);
+		fprintf( file, "%s", register->telalt);
+		// Sexo
+		putc('<', file);
+		putc( '3' , file);
+		putc('>', file);
+		putc('<', file);
+		putc( '6' , file);
+		putc('>', file);
+		putc( register->sexo, file);
+		// Curso
+		putc('<', file);
+		putc( '4', file);
+		putc('>', file);
+		putc('<', file);
+		putc( '7', file);
+		putc('>', file);
+		putc( register->curso, file);
+		// Fim do registro
+		putc( '#', file );
+
+		register = register->next;
+	}
+	
+	fclose(file);
+	
+	return count;
+}
+*/
 /*Funcao que verifica o tamanho real da string, nao conta os  espacos a direita da ultima letra.
 -Parametro 1: string a ser verificada
 Feita por: Richard Keller
@@ -53,9 +129,9 @@ char* leituraCampoFixo(char* word,int size,int* NcaracteresEntrada1, FILE* file)
 -Parametro 4: Arquivo a ser escrito
 Feita por: Richard Keller
 18:15 p.m. 29/03/2009*/
-void gravaCampoComSep(char* word,int size,int* Ncaracteres1, FILE* novo){
+void gravaCampoComSep(char* word,int* Ncaracteres1, FILE* novo){
         int i;
-        size=verificaTamanho(word);
+        int size=verificaTamanho(word);
         for(i=0;i<size-1;i++){
                   fputc(word[i],novo);
                   *Ncaracteres1+=1;
@@ -77,55 +153,56 @@ Feita por: Richard Keller
 16:56 p.m. 29/03/2009*/
 int GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* NcaracteresEntrada1, int* Ncaracteres1)
 {
-        char ra[RA_size], nome[NOME_size], cidade[CIDADE_size];
-        char telres[TELRES_size], telalt[TELALT_size],sexo,curso[CURSO_size], aux;
+        char aux;
+        t_register estrutura;
         int i, size =0;
+        
         while(1){//Captura todos os dados dos campos do arquivo 'file' e grava no arquivo 'novo'
         
               //Parte 1 - Leitura
-              strcpy(ra,leituraCampoFixo(ra,RA_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.ra,leituraCampoFixo(estrutura.ra,RA_size,NcaracteresEntrada1, file));
               
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
               
-              strcpy(nome,leituraCampoFixo(nome,NOME_size,NcaracteresEntrada1, file));
-              strcpy(cidade,leituraCampoFixo(cidade,CIDADE_size,NcaracteresEntrada1, file));
-              strcpy(telres,leituraCampoFixo(telres,TELRES_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.nome,leituraCampoFixo(estrutura.nome,NOME_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.cidade,leituraCampoFixo(estrutura.cidade,CIDADE_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.telres,leituraCampoFixo(estrutura.telres,TELRES_size,NcaracteresEntrada1, file));
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
               
-              strcpy(telalt,leituraCampoFixo(telalt,TELALT_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.telalt,leituraCampoFixo(estrutura.telalt,TELALT_size,NcaracteresEntrada1, file));
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
               
-              sexo = fgetc(file);
+              estrutura.sexo = fgetc(file);
               *NcaracteresEntrada1 +=1;
               
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
               
-              strcpy(curso,leituraCampoFixo(curso,CURSO_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.curso,leituraCampoFixo(estrutura.curso,CURSO_size,NcaracteresEntrada1, file));
               
               aux = fgetc(file);
+              // aux recebe o '#'
               *NcaracteresEntrada1 +=1;
-              
               aux = fgetc(file);
+              // aux recebe '\n' ou EOF ou um caracter diferente se o arquivo de entrada estiver com campos mal posicionados 
               *NcaracteresEntrada1 +=1;
               
               //Parte 2 - Escrita
-              gravaCampoComSep(ra, RA_size, Ncaracteres1, novo);
-              gravaCampoComSep(nome, NOME_size, Ncaracteres1, novo);
-              gravaCampoComSep(cidade,CIDADE_size,Ncaracteres1, novo);
-              gravaCampoComSep(telres,TELRES_size,Ncaracteres1,novo);
-              gravaCampoComSep(telalt,TELALT_size,Ncaracteres1,novo);
+              gravaCampoComSep(estrutura.ra, Ncaracteres1, novo);
+              gravaCampoComSep(estrutura.nome, Ncaracteres1, novo);
+              gravaCampoComSep(estrutura.cidade,Ncaracteres1, novo);
+              gravaCampoComSep(estrutura.telres,Ncaracteres1,novo);
+              gravaCampoComSep(estrutura.telalt,Ncaracteres1,novo);
               
-              fputc(sexo,novo);
-              printf("i=%d",i);
+              fputc(estrutura.sexo,novo);
               *Ncaracteres1+=1;
               fputc(separador,novo);
               *Ncaracteres1+=1;
               
-              gravaCampoComSep(curso,CURSO_size,Ncaracteres1,novo);
+              gravaCampoComSep(estrutura.curso,Ncaracteres1,novo);
               fputc(fimregistro,novo);
               *Ncaracteres1+=1;      
                       
@@ -154,6 +231,7 @@ int main(int argc, char *argv[]){
         FILE* file;
         FILE* file1;
         FILE* new;
+        FILE* new1;
         file = fopen(argv[1],"r");
         new = fopen(argv[2],"w");
         if(file){
