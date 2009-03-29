@@ -15,6 +15,19 @@
 #define TRUE 1
 #define FALSE 0
 
+/*Funcao que verifica o tamanho real da string, nao conta os  espacos a direita da ultima letra.
+-Parametro 1: string a ser verificada
+Feita por: Richard Keller
+18:30 p.m. 29/03/2009*/
+int verificaTamanho(char* word){
+        int i,j;
+        i=strlen(word);
+        for(j=i-1;i>0;j--){
+              if(word[j]!=blank)
+                  return j+2;
+        }
+}
+
 /*Funcao que le um campo de registro(tamanho fixo) a partir de um arquivo
 -Parametro 1: string a ser preenchida
 -Parametro 2: tamanho da string a ser lida
@@ -42,9 +55,8 @@ Feita por: Richard Keller
 18:15 p.m. 29/03/2009*/
 void gravaCampoComSep(char* word,int size,int* Ncaracteres1, FILE* novo){
         int i;
+        size=verificaTamanho(word);
         for(i=0;i<size-1;i++){
-                  if(word[i]==blank && word[i+1]==blank)// Pensar em solução melhor para isso
-                      break;
                   fputc(word[i],novo);
                   *Ncaracteres1+=1;
         }
@@ -58,7 +70,6 @@ void gravaCampoComSep(char* word,int size,int* Ncaracteres1, FILE* novo){
 -Parametro 3: Contador de numero de registros
 -Parametro 4: Contador de numero de registros da entrada
 -Parametro 5: Contador de numero de caracteres da saida
-Contendo uma string com a informacao da linguagem utilizada palo programa
 
 -Retorna False se número de parametros ou posição dos parametros estiver errada
 -Senão retorna True
