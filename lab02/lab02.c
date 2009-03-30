@@ -25,8 +25,8 @@ typedef struct s_register{
 	char curso[CURSO_size];
 } t_register;
 	
-/*
-int gera_arq_comp (File * file, t_register *register ){
+/*
+int GERA_ARQ_COMP (File * file, t_register *register ){
 	
 	int count;
 	
@@ -147,77 +147,72 @@ void gravaCampoComSep(char* word,int* Ncaracteres1, FILE* novo){
 -Parametro 4: Contador de numero de registros da entrada
 -Parametro 5: Contador de numero de caracteres da saida
 
--Retorna False se número de parametros ou posição dos parametros estiver errada
+-Retorna False se número de parametros ou a quantidade de bytes dos campos estiver errada
 -Senão retorna True
 Feita por: Richard Keller
 16:56 p.m. 29/03/2009*/
 int GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* NcaracteresEntrada1, int* Ncaracteres1)
 {
-        char aux;
+        char aux, aux2;
         t_register estrutura;
-        int i, size =0;
+        int i;
         
-        while(1){//Captura todos os dados dos campos do arquivo 'file' e grava no arquivo 'novo'
-        
+        while(1){
               //Parte 1 - Leitura
-              strcpy(estrutura.ra,leituraCampoFixo(estrutura.ra,RA_size,NcaracteresEntrada1, file));
-              
+              strcpy(estrutura.ra,leituraCampoFixo(estrutura.ra,RA_size,NcaracteresEntrada1, file));//RA
+              aux = fgetc(file);//leitura de espaço em branco
+              *NcaracteresEntrada1 +=1; 
+              strcpy(estrutura.nome,leituraCampoFixo(estrutura.nome,NOME_size,NcaracteresEntrada1, file));//NOME
+              strcpy(estrutura.cidade,leituraCampoFixo(estrutura.cidade,CIDADE_size,NcaracteresEntrada1, file));//CIDADE
+              strcpy(estrutura.telres,leituraCampoFixo(estrutura.telres,TELRES_size,NcaracteresEntrada1, file));//TELEFONE RESIDENCIAL
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
-              
-              strcpy(estrutura.nome,leituraCampoFixo(estrutura.nome,NOME_size,NcaracteresEntrada1, file));
-              strcpy(estrutura.cidade,leituraCampoFixo(estrutura.cidade,CIDADE_size,NcaracteresEntrada1, file));
-              strcpy(estrutura.telres,leituraCampoFixo(estrutura.telres,TELRES_size,NcaracteresEntrada1, file));
+              strcpy(estrutura.telalt,leituraCampoFixo(estrutura.telalt,TELALT_size,NcaracteresEntrada1, file));//TELEFONE ALTERNATIVO
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
-              
-              strcpy(estrutura.telalt,leituraCampoFixo(estrutura.telalt,TELALT_size,NcaracteresEntrada1, file));
+              estrutura.sexo = fgetc(file);//SEXO
+              *NcaracteresEntrada1 +=1;
               aux = fgetc(file);//leitura de espaço em branco
               *NcaracteresEntrada1 +=1;
+              strcpy(estrutura.curso,leituraCampoFixo(estrutura.curso,CURSO_size,NcaracteresEntrada1, file));//CURSO
+              aux = fgetc(file);// aux recebe o '#'
               
-              estrutura.sexo = fgetc(file);
               *NcaracteresEntrada1 +=1;
-              
-              aux = fgetc(file);//leitura de espaço em branco
+              aux2 = fgetc(file);// aux2 recebe '\n' ou EOF ou um caracter diferente se o arquivo de entrada estiver com campos mal posicionados 
               *NcaracteresEntrada1 +=1;
-              
-              strcpy(estrutura.curso,leituraCampoFixo(estrutura.curso,CURSO_size,NcaracteresEntrada1, file));
-              
-              aux = fgetc(file);
-              // aux recebe o '#'
-              *NcaracteresEntrada1 +=1;
-              aux = fgetc(file);
-              // aux recebe '\n' ou EOF ou um caracter diferente se o arquivo de entrada estiver com campos mal posicionados 
-              *NcaracteresEntrada1 +=1;
-              
+
               //Parte 2 - Escrita
-              gravaCampoComSep(estrutura.ra, Ncaracteres1, novo);
-              gravaCampoComSep(estrutura.nome, Ncaracteres1, novo);
-              gravaCampoComSep(estrutura.cidade,Ncaracteres1, novo);
-              gravaCampoComSep(estrutura.telres,Ncaracteres1,novo);
-              gravaCampoComSep(estrutura.telalt,Ncaracteres1,novo);
-              
-              fputc(estrutura.sexo,novo);
+              gravaCampoComSep(estrutura.ra, Ncaracteres1, novo);//RA
+              //printf("%s\n",estrutura.ra);
+              gravaCampoComSep(estrutura.nome, Ncaracteres1, novo);//NOME
+              //printf("%s\n",estrutura.nome);
+              gravaCampoComSep(estrutura.cidade,Ncaracteres1, novo);//CIDADE
+              //printf("%s\n",estrutura.cidade);
+              gravaCampoComSep(estrutura.telres,Ncaracteres1,novo);//TELEFONE RESIDENCIAL
+              //printf("%s\n",estrutura.telres);
+              gravaCampoComSep(estrutura.telalt,Ncaracteres1,novo);//TELEFONE ALTERNATIVO
+              //printf("%s\n",estrutura.telalt);
+              fputc(estrutura.sexo,novo);//SEXO
+              //printf("%c\n",estrutura.sexo);
               *Ncaracteres1+=1;
               fputc(separador,novo);
               *Ncaracteres1+=1;
-              
-              gravaCampoComSep(estrutura.curso,Ncaracteres1,novo);
+              gravaCampoComSep(estrutura.curso,Ncaracteres1,novo);//CURSO
+              //printf("%s",estrutura.curso);
               fputc(fimregistro,novo);
               *Ncaracteres1+=1;      
-                      
-                      
-              if(aux==EOF){//Verifica se chegou a um '\n' ou a fim do arquivo
+              //printf("%d ",aux);
+              //printf("%d ",aux2);
+              if(feof(file) || aux2==EOF){//Verifica se chegou ao fim do arquivo
                     *Nregistro+=1;
-                    break;
+                    return TRUE;
               }
-              else if(aux=='\n'){
-                    fputc('\n',novo);
-                    *Ncaracteres1+=1;
+              else if(aux2=='\n'){//Chegou ao fim da linha
                     *Nregistro+=1;
+                    fputc('\n',novo);
               }
               else{
-                    //mensagem de ERRO
+                    fprintf(stderr, "Mensagem de erro1");
                     return FALSE;
               }
         }
@@ -225,7 +220,7 @@ int GERA_ARQ_COM_SEPARADOR(FILE* file, FILE* novo, int* Nregistro, int* Ncaracte
 }
 
 int main(int argc, char *argv[]){
-        int Nregistro =0;
+        int Nregistro = 0;
         int Ncaracteres1 = 0;
         int NcaracteresEntrada1 =0;
         FILE* file;
@@ -236,7 +231,6 @@ int main(int argc, char *argv[]){
         new = fopen(argv[2],"w");
         if(file){
               if(GERA_ARQ_COM_SEPARADOR(file, new, &Nregistro, &NcaracteresEntrada1, &Ncaracteres1) == FALSE){
-                    //MENSAGEM DE ERRO
                     return 1;
               }
               fclose(file);
@@ -246,7 +240,6 @@ int main(int argc, char *argv[]){
               printf("Numero de caracteres do arquivo de saida 1: %d\n",Ncaracteres1);
         }
         else{
-            //Mensagem de ERRO
             return 1;
         }
         
