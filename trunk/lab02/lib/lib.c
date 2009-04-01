@@ -79,13 +79,13 @@ int gera_arq_compacto (char *fileInPath, char *fileOutPath){
         aluno = createAluno(reg);
         
         //Parte 2 - Escrita
-        fprintf(novo, "<%d><%d><%s>", RA_SIZE+2, 1, aluno->ra);
-        fprintf(novo, "<%d><%d><%s>", NOME_SIZE+2, 2, aluno->nome);
-        fprintf(novo, "<%d><%d><%s>", CIDADE_SIZE+2, 3, aluno->cidade);
-        fprintf(novo, "<%d><%d><%s>", TELRES_SIZE+2, 4, aluno->telres);
-        fprintf(novo, "<%d><%d><%s>", TELALT_SIZE+2, 5, aluno->telalt);
-        fprintf(novo, "<%d><%d><%c>", SEXO_SIZE+2, 6, aluno->sexo[0]);
-        fprintf(novo, "<%d><%d><%s>", CURSO_SIZE+2, 7, aluno->curso);
+        fprintf(novo, "%c%c%s", RA_SIZE+2, 1, aluno->ra);
+        fprintf(novo, "%c%c%s", NOME_SIZE+2, 2, aluno->nome);
+        fprintf(novo, "%c%c%s", CIDADE_SIZE+2, 3, aluno->cidade);
+        fprintf(novo, "%c%c%s", TELRES_SIZE+2, 4, aluno->telres);
+        fprintf(novo, "%c%c%s", TELALT_SIZE+2, 5, aluno->telalt);
+        fprintf(novo, "%c%c%c", SEXO_SIZE+2, 6, aluno->sexo[0]);
+        fprintf(novo, "%c%c%s", CURSO_SIZE+2, 7, aluno->curso);
         fprintf(novo, "%c\n", FIMREGISTRO);
         
         //Parte 3 - frees
@@ -106,7 +106,7 @@ int gera_arq_com_separador(char *fileInPath, char *fileOutPath){
     int i;
 
     FILE *file = fopen(fileInPath, "r");
-    FILE *novo = fopen(fileOutPath, "w");    
+    FILE *novo = fopen(fileOutPath, "w");
 
     for(i=1; i <= n; i++){
         //Parte 1 - Leitura
